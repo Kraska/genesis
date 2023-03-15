@@ -1,28 +1,26 @@
 import React, { useEffect } from 'react';
+import Container from 'react-bootstrap/esm/Container';
 import { useParams } from 'react-router-dom';
+import { Course } from '../components/Course';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { fetchCourses } from '../store/reducers/courses/ActionCreators';
+import { CourseDetails } from '../models/Course';
+import { fetchCourseDetails } from '../store/reducers/coursesDetails/ActionCreators';
 
 
 export const CoursePage: React.FC = () => {
 
     const { id } = useParams();
-
-    const { coursesMap, isLoading, error } = useAppSelector(state => state.coursesReducer);
+// console.log(id)
+    const { coursesMap, isLoading, error } = useAppSelector(state => state.coursesDetailsReducer);
 
     const dispatch = useAppDispatch();
     useEffect(() => {
-        !coursesMap.length && !isLoading && dispatch(fetchCourses());
+        id && !coursesMap[id] && !isLoading && dispatch(fetchCourseDetails(id));
     }, []);
 
-    const course = id && coursesMap[id]
+    const course: CourseDetails | null = id && coursesMap[id] ? coursesMap[id] : null;
 
-    return <div>
-        {course &&
-        <>
-            <p>{course.title}</p>
-            <div>{course.description}</div>
-        </>
-        }
-    </div>
+    return <Container className='my-5'>
+        {course && <Course course={course} />}
+    </Container>
 }

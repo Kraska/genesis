@@ -3,11 +3,11 @@ export type ICourse =  {
     title: string,
     tags: string[],
     launchDate: string,
-    status: "launched" | "?",
+    status: "launched" | "...",
     description: string,
     duration: number,
-    lessonsCount: number,
-    containsLockedLessons: boolean,
+    lessonsCount: number, 
+    containsLockedLessons: boolean, 
     previewImageLink: boolean,
     rating: number,
     meta: {
@@ -25,7 +25,7 @@ export type CoursePreview ={
     id: string,
     title: string,
     description: string,
-    lessonsCount: number,
+    lessonsCount: number, 
     imgLink: string,
     rating: number,
     skills: string[],
@@ -35,5 +35,25 @@ export type CoursePreview ={
         duration: number,
         previewImageLink: string
     }
+}
+
+
+export type Lesson =  {
+    id: string,
+    title: string,
+    duration: number,
+    order: number,
+    type: "video" | "text",
+    status: "unlocked" | "locked",
+    link: string, //"https://wisey.app/videos/lack-of-motivation-how-to-overcome-it/lesson-1/AppleHLS1/lesson-1.m3u8",
+    previewImageLink: string, //"https://wisey.app/assets/images/web/lessons-covers/lack-of-motivation-how-to-overcome-it/lesson-1",
+    meta: null | {}
+}
+
+
+export type CourseDetails = ICourse & {
+    containsLockedLessons?: boolean, 
+    previewImageLink?: boolean,
+    lessons: Lesson[]
 }
 

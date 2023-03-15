@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Container } from 'react-bootstrap';
 import { AppRoute } from '../AppRoute';
 import { CoursesList } from '../components/CoursesList';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
@@ -46,7 +47,7 @@ export const HomePage: React.FC = () => {
 
     const courses=Object.values(coursesMap).map(item => convertCourseToPreview(item))
 
-    return <div>
+    return <Container className="my-5">
         <CoursesList courses={courses} />
-    </div>
+    </Container>
 }

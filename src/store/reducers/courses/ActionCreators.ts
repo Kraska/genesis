@@ -4,9 +4,6 @@ import { ICourse } from "../../../models/Course";
 import { AppDispatch } from "../../store";
 import { coursesSlice } from "./CoursesSlice"; 
 
-type ResponseData = {
-
-}
 
 export const fetchCourses = () => async(dispatch: AppDispatch) => {
 

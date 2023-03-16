@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Container } from 'react-bootstrap';
 import { AppRoute } from '../AppRoute';
 import { CoursesList } from '../components/CoursesList';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { CoursePreview, ICourse } from '../models/Course';
 import { fetchCourses } from '../store/reducers/courses/ActionCreators';
+import { Layout } from './Layout';
+
 
 
 const convertCourseToPreview = (course: ICourse): CoursePreview => {
@@ -47,7 +48,10 @@ export const HomePage: React.FC = () => {
 
     const courses=Object.values(coursesMap).map(item => convertCourseToPreview(item))
 
-    return <Container className="my-5">
-        <CoursesList courses={courses} />
-    </Container>
+    return <Layout>
+        <>
+            <h1 className="mb-5">Eliminate procrastination with your Personal Plan</h1>
+            <CoursesList courses={courses} />
+        </>
+    </Layout>
 }

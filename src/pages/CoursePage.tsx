@@ -5,6 +5,7 @@ import { Course } from '../components/Course';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { CourseDetails } from '../models/Course';
 import { fetchCourseDetails } from '../store/reducers/coursesDetails/ActionCreators';
+import { Layout } from './Layout';
 
 
 export const CoursePage: React.FC = () => {
@@ -20,7 +21,7 @@ export const CoursePage: React.FC = () => {
 
     const course: CourseDetails | null = id && coursesMap[id] ? coursesMap[id] : null;
 
-    return <Container className='my-5'>
+    return <Layout>
         {course && <Course course={course} />}
-    </Container>
+    </Layout>
 }

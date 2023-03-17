@@ -1,4 +1,4 @@
-export type ICourse =  {
+export type IAPICourse =  {
     id: string,
     title: string,
     tags: string[],
@@ -21,7 +21,7 @@ export type ICourse =  {
     }
 };
 
-export type CoursePreview ={
+export type ICourse ={
     id: string,
     title: string,
     description: string,
@@ -51,7 +51,7 @@ export type Lesson =  {
 }
 
 
-export type CourseDetails = ICourse & {
+export type CourseDetails = IAPICourse & {
     containsLockedLessons?: boolean, 
     previewImageLink?: boolean,
     lessons: Lesson[]

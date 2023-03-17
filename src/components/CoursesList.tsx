@@ -1,13 +1,12 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
-import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import { Link } from 'react-router-dom';
-import { CoursePreview } from '../models/Course';
+import { ICourse } from '../models/Course';
 
 type CoursesListProps = {
-    courses: CoursePreview[],
+    courses: ICourse[],
 }
 
 export const CoursesList: React.FC<CoursesListProps> = ({ courses }) => {
@@ -19,7 +18,7 @@ export const CoursesList: React.FC<CoursesListProps> = ({ courses }) => {
 
 
 type CoursePreviewProps = {
-    course: CoursePreview,
+    course: ICourse,
 }
 const CourseItem: React.FC<CoursePreviewProps> = ({ course }) => {
     

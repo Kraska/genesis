@@ -14,14 +14,18 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
     // console.log(course)
     // const launchDate = new Date(course.launchDate).toLocaleDateString("en-US");
 
-    const psRef = useRef<ProgressStorage>(new ProgressStorage(course))
-    useEffect(() => { psRef.current.load() }, [])
-
     const videoRef = useRef<VideoPlayer>(null);
 
     const initLesson = course.lessons
         .find(({ status }) => status === "unlocked")        
     const [ currentLesson, setCurrentLesson ] = useState(initLesson)
+
+    const psRef = useRef<ProgressStorage>(new ProgressStorage(course))
+    useEffect(() => { 
+        psRef.current.load()
+        const lesson = psRef.current.getCurrentLesson() 
+        lesson && setCurrentLesson(lesson)
+    }, [])
 
     const onOpenLesson = (lesson: Lesson) => {
         const time = videoRef.current?.getCurrentTime();
@@ -34,7 +38,8 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
         psRef.current.save(currentLesson, time)
     }
     
-    const currentTime = currentLesson ? psRef.current.getProgress(currentLesson) : 0;
+    const currentTime = currentLesson ? 
+        psRef.current.getProgress(currentLesson).time : 0;
 
     return  <>
         <h1>{course.title}</h1>
@@ -81,7 +86,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                             key={lesson.id} 
                             lesson={lesson} 
                             onOpen={onOpenLesson} 
-                            progress={psRef.current.getProgressPersent(lesson)}
+                            progress={psRef.current.getProgress(lesson).persent}
                             />))
                     } 
                 </Row>

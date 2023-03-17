@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Container from 'react-bootstrap/esm/Container';
 import { useParams } from 'react-router-dom';
 import { Course } from '../components/Course';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';

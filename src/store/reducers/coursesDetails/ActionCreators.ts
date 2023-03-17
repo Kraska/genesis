@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { ICourseDetails } from "../../../models/ICourse";
+import { ICourseDetails } from "../../../models/ICourseDetails";
 import { AppDispatch } from "../../store";
 import { coursesDetailsSlice } from "./CourseDetailsSlice"; 
 import { AppConfig } from "../../../config";

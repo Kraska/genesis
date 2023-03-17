@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { ICourseDetails } from "../../../models/ICourse"
+import { ICourseDetails } from "../../../models/ICourseDetails"
 
 
 type CoursesDetailsSatate = {

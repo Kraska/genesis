@@ -1,7 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { AppRoute } from "../../../AppRoute";
 import { AppConfig } from "../../../config";
-import { ICourse, IAPICourse } from "../../../models/ICourse";
+import { ICourse } from "../../../models/ICourse";
+import { IAPICourse } from "../../../models/IAPICourse";
 import { AppDispatch } from "../../store";
 import { coursesSlice } from "./CoursesSlice"; 
 

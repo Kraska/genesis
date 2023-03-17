@@ -1,6 +1,7 @@
 import { RefObject, useEffect, useRef, useState } from "react"
 import { Button, Card, Col, Container, ProgressBar, Row } from "react-bootstrap"
-import { ICourseDetails, Lesson } from "../models/ICourse"
+import { Lesson } from "../models/Lesson"
+import { ICourseDetails } from "../models/ICourseDetails"
 import { ProgressStorage } from "../utils/ProgressStorage"
 import { VideoPlayer } from "./VideoPlayer"
 

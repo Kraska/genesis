@@ -1,4 +1,5 @@
-import { ICourseDetails, Lesson } from "../models/ICourse";
+import { Lesson } from "../models/Lesson";
+import { ICourseDetails } from "../models/ICourseDetails";
 
 
 type Progress = {

@@ -23,6 +23,16 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
         return this.videoRef.current?.currentTime
     }
 
+    public switchPictureInPicture() {
+        console.log('switchPictureInPicture')
+        this.videoRef.current?.requestPictureInPicture()
+        // this.videoRef.current?.enterpictureinpicture()   
+    }
+
+    public addListener(eventName: string, fn: () => void) {
+        this.videoRef.current?.addEventListener(eventName, fn)
+    }
+
     render() {
 
         let { src, autoPlay, currentTime, onPause, ...restProps } = this.props;

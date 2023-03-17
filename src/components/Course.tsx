@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react"
-import { Card, Col, Container, ProgressBar, Row } from "react-bootstrap"
+import { RefObject, useEffect, useRef, useState } from "react"
+import { Button, Card, Col, Container, ProgressBar, Row } from "react-bootstrap"
 import { CourseDetails, Lesson } from "../models/Course"
 import { ProgressStorage } from "../utils/ProgressStorage"
 import { VideoPlayer } from "./VideoPlayer"
@@ -61,7 +61,10 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                     style={{ width: "100%" }} 
                     ref={videoRef}
                 />
-                <h4>{currentLesson.title}</h4>
+                <div className="d-flex justify-content-between">
+                    <h4>{currentLesson.title}</h4> 
+                    <PIPBtn videoRef={videoRef} />
+                </div>
             </>}
             
             {/* <section className='my-3'>
@@ -124,4 +127,42 @@ const LessonPreview: React.FC<LessonPreviewProps> = ({ lesson, onOpen, progress 
             </Card.Body>
         </Card>
     </Col>
+}
+
+
+type PIPBtnProps = {
+    videoRef: RefObject<VideoPlayer>,
+}
+const PIPBtn: React.FC<PIPBtnProps> = ({ videoRef }) => {
+
+    const initTitle = "Go to picture in picture"
+    const [ disabled, setDisabled ] = useState(false)
+    const [ title, setTitle ] = useState(initTitle) 
+
+    useEffect(() => {
+
+        videoRef.current?.addListener(
+            'enterpictureinpicture',
+            () => {
+                setDisabled(true)
+                setTitle("Now in picture in picture")
+            }
+        )
+        videoRef.current?.addListener(
+            'leavepictureinpicture',
+            () => {
+                setDisabled(false)
+                setTitle(initTitle)
+            }
+        )
+
+    }, [])
+
+    return <Button 
+        variant="outline-secondary"
+        onClick={() => {videoRef.current?.switchPictureInPicture()}}
+        disabled={disabled}
+        >
+        {title}
+    </Button>
 }

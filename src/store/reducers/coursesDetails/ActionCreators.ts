@@ -2,19 +2,18 @@ import axios, { AxiosError } from "axios";
 import { CourseDetails } from "../../../models/Course";
 import { AppDispatch } from "../../store";
 import { coursesDetailsSlice } from "./CourseDetailsSlice"; 
+import { AppConfig } from "../../../config";
 
 
 export const fetchCourseDetails = (courseId: string) => async(dispatch: AppDispatch) => {
 
-    // const token = "";
-    const host = "31423469-5d4d-43c6-bb86-b4bcf588022a.mock.pstmn.io";
     try {
         dispatch(coursesDetailsSlice.actions.fatching())
         const resp = await axios.get<CourseDetails>(
-            `https://${host}/api/v1/core/preview-courses/${courseId}`, 
+            `https://${AppConfig.API_HOST}/api/v1/core/preview-courses/${courseId}`, 
             {headers: { 
                 "Content-Type": "application/json",
-                // "Authorization": `Bearer ${}`,
+                "Authorization": `Bearer ${AppConfig.API_TOKEN}`,
             }}
         );
 

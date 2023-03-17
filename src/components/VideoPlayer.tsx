@@ -26,8 +26,8 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
     render() {
 
         let { src, autoPlay, currentTime, onPause, ...restProps } = this.props;
-        src = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
-    
+        // src = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
+
         const onStop = () => {
             onPause && 
             this.videoRef.current &&

@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { CourseDetails } from "../../../models/Course"
+import { ICourseDetails } from "../../../models/Course"
 
 
 type CoursesDetailsSatate = {
-    coursesMap: Record<string, CourseDetails>,
+    coursesMap: Record<string, ICourseDetails>,
     isLoading: boolean,
     error: string,
 }
@@ -23,7 +23,7 @@ export const coursesDetailsSlice = createSlice({
         },
         fatchingSuccess(
             state, 
-            action: PayloadAction<[string, CourseDetails]>
+            action: PayloadAction<[string, ICourseDetails]>
         ) {
             const [ courseId, course ] = action.payload;
             state.isLoading = false;

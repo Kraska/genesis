@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Course } from '../components/Course';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { CourseDetails } from '../models/Course';
+import { ICourseDetails } from '../models/Course';
 import { fetchCourseDetails } from '../store/reducers/coursesDetails/ActionCreators';
 import { Layout } from './Layout';
 
@@ -18,7 +18,7 @@ export const CoursePage: React.FC = () => {
         id && !coursesMap[id] && !isLoading && dispatch(fetchCourseDetails(id));
     }, []);
 
-    const course: CourseDetails | null = id && coursesMap[id] ? coursesMap[id] : null;
+    const course: ICourseDetails | null = id && coursesMap[id] ? coursesMap[id] : null;
 
     return <Layout>
         {course && <Course course={course} />}

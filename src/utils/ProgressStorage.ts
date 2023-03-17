@@ -1,4 +1,4 @@
-import { CourseDetails, Lesson } from "../models/Course";
+import { ICourseDetails, Lesson } from "../models/Course";
 
 
 type Progress = {
@@ -10,12 +10,12 @@ type Progress = {
 export class ProgressStorage {
 
     private ls: Storage;
-    private course: CourseDetails;
+    private course: ICourseDetails;
     private lsKey: string;
     private progressMap: Record<string, Progress>;
     private timesMap: Record<string, number> = {};
 
-    constructor(course: CourseDetails) {
+    constructor(course: ICourseDetails) {
         this.ls = localStorage
         this.course = course
         this.lsKey = `progress_${course.id}`

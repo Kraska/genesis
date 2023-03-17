@@ -51,7 +51,7 @@ export type Lesson =  {
 }
 
 
-export type CourseDetails = IAPICourse & {
+export type ICourseDetails = IAPICourse & {
     containsLockedLessons?: boolean, 
     previewImageLink?: boolean,
     lessons: Lesson[]

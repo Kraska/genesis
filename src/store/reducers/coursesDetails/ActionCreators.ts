@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { CourseDetails } from "../../../models/Course";
+import { ICourseDetails } from "../../../models/Course";
 import { AppDispatch } from "../../store";
 import { coursesDetailsSlice } from "./CourseDetailsSlice"; 
 import { AppConfig } from "../../../config";
@@ -9,7 +9,7 @@ export const fetchCourseDetails = (courseId: string) => async(dispatch: AppDispa
 
     try {
         dispatch(coursesDetailsSlice.actions.fatching())
-        const resp = await axios.get<CourseDetails>(
+        const resp = await axios.get<ICourseDetails>(
             `https://${AppConfig.API_HOST}/api/v1/core/preview-courses/${courseId}`, 
             {headers: { 
                 "Content-Type": "application/json",

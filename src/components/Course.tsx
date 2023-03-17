@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Card, Col, Container, ProgressBar, Row } from "react-bootstrap"
 import { CourseDetails, Lesson } from "../models/Course"
+import { ProgressStorage } from "../utils/ProgressStorage"
 import { VideoPlayer } from "./VideoPlayer"
 
 
@@ -13,13 +14,8 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
     // console.log(course)
     // const launchDate = new Date(course.launchDate).toLocaleDateString("en-US");
 
-    const progressStorageKey = `progress_${course.id}`
-
-    const progressRef = useRef<Record<string, number>>({})
-    useEffect(() => {
-        const progressMap = JSON.parse(localStorage.getItem(progressStorageKey) || "{}");
-        progressRef.current = progressMap
-    }, []);
+    const psRef = useRef<ProgressStorage>(new ProgressStorage(course))
+    useEffect(() => { psRef.current.load() }, [])
 
     const videoRef = useRef<VideoPlayer>(null);
 
@@ -33,15 +29,20 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
         setCurrentLesson(lesson)
     }
 
-    const onPause = (time: number) => {
-        progressRef.current[currentLesson!.id] = time
-        localStorage.setItem(progressStorageKey, JSON.stringify(progressRef.current));
+    const onPause = (time: number) => {        
+        currentLesson &&
+        psRef.current.save(currentLesson, time)
     }
     
-    const currentTime = currentLesson ? progressRef.current[currentLesson.id] : 0;
+    const currentTime = currentLesson ? psRef.current.getProgress(currentLesson) : 0;
 
     return  <>
         <h1>{course.title}</h1>
+        <ProgressBar 
+            style={{height: "6px"}} 
+            variant="success"  
+            now={psRef.current.getCourseProgress()} 
+            />
         {/* videoSrc = {videoSrc} */}
         <Container className='my-5'>
             {currentLesson && <>
@@ -80,7 +81,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                             key={lesson.id} 
                             lesson={lesson} 
                             onOpen={onOpenLesson} 
-                            progress={progressRef.current[lesson.id]}
+                            progress={psRef.current.getProgressPersent(lesson)}
                             />))
                     } 
                 </Row>
@@ -114,20 +115,8 @@ const LessonPreview: React.FC<LessonPreviewProps> = ({ lesson, onOpen, progress 
             <Card.Img variant="top" src={imgUrl} />
             <Card.Body>
                 <Card.Title>{lesson.title}</Card.Title>
-                <LessonProgress lesson={lesson} progress={progress} />
+                <ProgressBar style={{height: "4px"}} variant="success" now={progress} />
             </Card.Body>
         </Card>
     </Col>
-}
-
-
-
-type LessonProgressProps = {
-    lesson: Lesson,
-    progress?: number
-}
-const LessonProgress: React.FC<LessonProgressProps> = ({ lesson, progress =0 }) => {
-    const now = Math.round(progress*100/lesson.duration)
-    // console.log('progress', progress, lesson.duration, now)
-    return <ProgressBar style={{height: "4px"}} variant="success" now={now} />
 }

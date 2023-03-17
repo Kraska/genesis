@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Course } from '../components/Course';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { ICourseDetails } from '../models/Course';
+import { ICourseDetails } from '../models/ICourse';
 import { fetchCourseDetails } from '../store/reducers/coursesDetails/ActionCreators';
 import { Layout } from './Layout';
 

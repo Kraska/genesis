@@ -5,18 +5,16 @@ import { fetchCourses } from '../store/reducers/courses/ActionCreators';
 import { Layout } from './Layout';
 
 
-
-
 export const HomePage: React.FC = () => {
 
-    const { coursesMap, isLoading, error } = useAppSelector(state => state.coursesReducer);
+    const { coursesMap, isLoading, error } = useAppSelector(state => state.coursesReducer)
 
     const dispatch = useAppDispatch();
-    useEffect(() => {
-        !coursesMap.length && !isLoading && dispatch(fetchCourses());
+    useEffect(() => { 
+        !Object.values(coursesMap).length && 
+        !isLoading && 
+        dispatch(fetchCourses());
     }, []);
-
-    // console.log("coursesMap = ", coursesMap)
 
     return <Layout>
         <>

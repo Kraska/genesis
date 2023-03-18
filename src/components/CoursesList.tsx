@@ -24,7 +24,7 @@ const CourseItem: React.FC<CoursePreviewProps> = ({ course }) => {
     
     return ( 
         <Col sx="12" md="4" className="mb-3">
-            <Card className="m-2">
+            <Card className="m-2" data-testid="course-card">
                 <Card.Img variant="top" src={course.imgLink} />
                 <Card.Body>
                     <Card.Title>

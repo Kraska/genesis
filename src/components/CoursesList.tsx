@@ -1,19 +1,34 @@
-import React from 'react';
-import { Card } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Container } from 'react-bootstrap';
 import Col from 'react-bootstrap/esm/Col';
 import Row from 'react-bootstrap/esm/Row';
 import { Link } from 'react-router-dom';
 import { ICourse } from '../models/ICourse';
+import { Paginator } from './Paginator';
 
 type CoursesListProps = {
     courses: ICourse[],
 }
 
 export const CoursesList: React.FC<CoursesListProps> = ({ courses }) => {
+    const countOnPage = 9
+    const [ page, setPage ] = useState(1)
     
-    return <Row>
-        {courses.map(item => (<CourseItem key={item.id} course={item} />))}
-    </Row>;
+    const items = courses.slice((page - 1)*countOnPage, page*countOnPage)
+
+    return <>
+        <Row>
+            {items.map(item => (<CourseItem key={item.id} course={item} />))}
+        </Row>
+        <Container className='d-flex justify-content-center'>
+            <Paginator 
+                count={courses.length} 
+                countOnPage={countOnPage}
+                currentPage={page}
+                onChangePage={setPage}
+                />
+        </Container>
+    </>;
 }
 
 

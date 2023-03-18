@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { CoursesList } from '../components/CoursesList';
+import { Preloader } from '../components/Preloader';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { fetchCourses } from '../store/reducers/courses/ActionCreators';
 import { Layout } from './Layout';
@@ -19,7 +20,10 @@ export const HomePage: React.FC = () => {
     return <Layout>
         <>
             <h1 className="mb-5">Eliminate procrastination with your Personal Plan</h1>
-            <CoursesList courses={Object.values(coursesMap)} />
+            {!isLoading ?
+                <CoursesList courses={Object.values(coursesMap)} /> :
+                <Preloader />
+            }
         </>
     </Layout>
 }

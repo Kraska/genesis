@@ -40,25 +40,25 @@ const CourseItem: React.FC<CoursePreviewProps> = ({ course }) => {
     
     return ( 
         <Col sx="12" md="4" className="mb-3">
-            <Card className="m-2" data-testid="course-card">
-                <Card.Img variant="top" src={course.imgLink} style={{paddingBottom: "40px"}} />
-                <VideoOverlay src={course.courseVideoPreview.link} />
-                <Card.Body>
-                    <Card.Title>
-                        <Link to={course.link}>{course.title}</Link>
-                    </Card.Title>
-                    <Card.Text>{course.description}</Card.Text>
-                    <small >
-                        <b>Skils</b>: {course.skills && course.skills.join(', ')}
-                    </small>
-                </Card.Body>
-                <Card.Footer>
-                    <small className="text-muted">
-                        Rating: {course.rating}, 
-                        Lessons: {course.lessonsCount}
-                    </small>
-                </Card.Footer>
-            </Card>
+            <Link to={course.link} style={{ textDecoration: 'none', color: "inherit" }}>
+                <Card className="m-2" data-testid="course-card" style={{ textDecoration: "none"}}>
+                    <Card.Img variant="top" src={course.imgLink} style={{paddingBottom: "40px"}} />
+                    <VideoOverlay src={course.courseVideoPreview.link} />
+                    <Card.Body>
+                        <Card.Title>{course.title}</Card.Title>
+                        <Card.Text>{course.description}</Card.Text>
+                        <small >
+                            <b>Skils</b>: {course.skills && course.skills.join(', ')}
+                        </small>
+                    </Card.Body>
+                    <Card.Footer>
+                        <small className="text-muted">
+                            Rating: {course.rating}, 
+                            Lessons: {course.lessonsCount}
+                        </small>
+                    </Card.Footer>
+                </Card>
+            </Link>
         </Col>
     );
 }

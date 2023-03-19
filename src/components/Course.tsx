@@ -47,7 +47,6 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
         <Container className='my-5'>
             {currentLesson && <>
                 <VideoPlayer
-                    id={currentLesson.id}
                     src={currentLesson.link}
                     muted
                     autoPlay

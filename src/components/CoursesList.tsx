@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/esm/Row';
 import { Link } from 'react-router-dom';
 import { ICourse } from '../models/ICourse';
 import { Paginator } from './Paginator';
+import { VideoPlayer } from './VideoPlayer';
 
 type CoursesListProps = {
     courses: ICourse[],
@@ -40,7 +41,8 @@ const CourseItem: React.FC<CoursePreviewProps> = ({ course }) => {
     return ( 
         <Col sx="12" md="4" className="mb-3">
             <Card className="m-2" data-testid="course-card">
-                <Card.Img variant="top" src={course.imgLink} />
+                <Card.Img variant="top" src={course.imgLink} style={{paddingBottom: "40px"}} />
+                <VideoOverlay src={course.courseVideoPreview.link} />
                 <Card.Body>
                     <Card.Title>
                         <Link to={course.link}>{course.title}</Link>
@@ -59,4 +61,28 @@ const CourseItem: React.FC<CoursePreviewProps> = ({ course }) => {
             </Card>
         </Col>
     );
+}
+
+
+type VideoOverlayProps = {
+    src: string
+}
+const VideoOverlay: React.FC<VideoOverlayProps> = ({ src }) => {
+
+    const [ mouseOver, setMouseOver ] = useState(false)
+
+    const className = mouseOver ? "" : "d-none"
+
+    return <Card.ImgOverlay 
+        onMouseOver={() => setMouseOver(true)} 
+        onMouseLeave={() => setMouseOver(false)}
+        >
+        <VideoPlayer
+            className={className}
+            src={src}
+            muted
+            autoPlay
+            style={{ width: "100%", top: 0, left:0, position: "absolute" }} 
+        />
+    </Card.ImgOverlay> 
 }

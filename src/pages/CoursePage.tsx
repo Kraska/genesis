@@ -23,8 +23,6 @@ export const CoursePage: React.FC = () => {
     const course: ICourseDetails | null = id && coursesMap[id] ? coursesMap[id] : null;
 
     return <Layout>
-        {course && <Course course={course} />}
-
         {isLoading ?
                 <Preloader /> :
                 error ? <Alert error={error} /> :

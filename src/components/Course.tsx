@@ -28,13 +28,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
         lesson && setCurrentLesson(lesson)
     }, [])
 
-    const onOpenLesson = (lesson: Lesson) => {
-        const time = videoRef.current?.getCurrentTime();
-        time && onPause(time)
-        setCurrentLesson(lesson)
-    }
-
-    const onPause = (time: number) => {        
+    const onUpdateTime = (time: number) => {        
         currentLesson &&
         psRef.current.save(currentLesson, time)
     }
@@ -55,9 +49,10 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                 <VideoPlayer
                     id={currentLesson.id}
                     src={currentLesson.link}
+                    muted
                     autoPlay
-                    onPause={onPause}
                     currentTime={currentTime || 0}
+                    onUpdateTime={onUpdateTime}
                     controls 
                     style={{ width: "100%" }} 
                     ref={videoRef}
@@ -89,7 +84,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                         (<LessonPreview 
                             key={lesson.id} 
                             lesson={lesson} 
-                            onOpen={onOpenLesson} 
+                            onOpen={setCurrentLesson} 
                             progress={psRef.current.getProgress(lesson).persent}
                             />))
                     } 
@@ -119,8 +114,8 @@ const LessonPreview: React.FC<LessonPreviewProps> = ({ lesson, onOpen, progress 
     const isLocked = lesson.status === 'locked';
     const className = isLocked ? 'my-3 opacity-50' : 'my-3';
 
-    return <Col sx="12" md="4">
-        <Card className={className} onClick={onClick}>
+    return <Col sx="12" md="4" >
+        <Card className={className} onClick={onClick}  style={{cursor: "pointer"}}>
             <Card.Img variant="top" src={imgUrl} />
             <Card.Body>
                 <Card.Title>{lesson.title}</Card.Title>

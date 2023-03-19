@@ -6,25 +6,22 @@ type VideoPlayerProps = {
     src: string,
     autoPlay?: boolean,
     currentTime?: number,
-    onPause?: (time: number) => void,
+    onUpdateTime?: (time: number) => void,
     [x:string]: any
 }
 
 export class VideoPlayer extends React.Component<VideoPlayerProps> {
 
     private videoRef: RefObject<HTMLVideoElement>;
+    private intervalID: NodeJS.Timer | null = null;
 
     constructor( props: VideoPlayerProps ) {
         super(props);
         this.videoRef = React.createRef();
     }
 
-    public getCurrentTime() {
-        return this.videoRef.current?.currentTime
-    }
-
     public switchPictureInPicture() {
-        console.log('switchPictureInPicture')
+        // console.log('switchPictureInPicture')
         this.videoRef.current?.requestPictureInPicture()
         // this.videoRef.current?.enterpictureinpicture()   
     }
@@ -33,16 +30,24 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
         this.videoRef.current?.addEventListener(eventName, fn)
     }
 
+    private updateTime() {
+        if (!this.intervalID) {
+            this.intervalID = setInterval(() => {
+                this.videoRef.current &&
+                this.props.onUpdateTime &&
+                this.props.onUpdateTime(this.videoRef.current.currentTime)
+            }, 3000);
+        }
+    }
+
+    componentWillUnmount() {
+        this.intervalID && clearInterval(this.intervalID);
+    }
+
     render() {
 
-        let { src, autoPlay, currentTime, onPause, ...restProps } = this.props;
+        let { src, autoPlay, currentTime, onUpdateTime, ...restProps } = this.props;
         // src = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
-
-        const onStop = () => {
-            onPause && 
-            this.videoRef.current &&
-            onPause(this.videoRef.current.currentTime)
-        }
 
         const play = () => {
             if (this.videoRef.current) {
@@ -63,8 +68,7 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
 
             } else if (this.videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
             
-                this.videoRef.current.src = src;
-                
+                this.videoRef.current.src = src;                
                 autoPlay && this.videoRef.current.addEventListener('canplay', play);
             }
 
@@ -74,9 +78,27 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
                 }
             }
 
-            this.videoRef.current.onpause = onStop
+            this.props.onUpdateTime && this.updateTime()
         }    
 
-        return <video muted={true} {...restProps} ref={this.videoRef} />     
+        return <video {...restProps} ref={this.videoRef} />     
     }
 }
+
+// type PreloaderProps = {
+//     disabled?: boolean
+// }
+// const Preloader: React.FC<PreloaderProps> = ({ disabled }) => {
+//     return <div 
+//         className={disabled ? "d-none" : ""} 
+//         style={{position: "absolute", 
+//             top: "50%", 
+//             left: "40%", 
+//             display: "flex" ,
+//             alignItems: "center",
+//             justifyContent: "center",
+//         }}
+//     >
+//         <Container className="text-white" >Loading...</Container>
+//     </div>
+// }

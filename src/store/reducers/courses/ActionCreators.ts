@@ -14,7 +14,7 @@ export const fetchCourses = () => async(dispatch: AppDispatch) => {
         // console.log('fetchCourses')
         dispatch(coursesSlice.actions.fatching())
         const resp = await axios.get<{courses: IAPICourse[]}>(
-            `https://${AppConfig.API_HOST}/api/v1/core/preview-courses1`, 
+            `https://${AppConfig.API_HOST}/api/v1/core/preview-courses`, 
             {headers: { 
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${AppConfig.API_TOKEN}`,

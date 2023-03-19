@@ -3,6 +3,7 @@ import { ICourseDetails } from "../../../models/ICourseDetails";
 import { AppDispatch } from "../../store";
 import { coursesDetailsSlice } from "./CourseDetailsSlice"; 
 import { AppConfig } from "../../../config";
+import { convertToAPIError } from "../../../models/APIError";
 
 
 export const fetchCourseDetails = (courseId: string) => async(dispatch: AppDispatch) => {
@@ -21,6 +22,8 @@ export const fetchCourseDetails = (courseId: string) => async(dispatch: AppDispa
 
         dispatch(coursesDetailsSlice.actions.fatchingSuccess([courseId, resp.data]));
     } catch(e) {
-        dispatch(coursesDetailsSlice.actions.fatchingError((e as AxiosError).message))
+        const error = convertToAPIError(e as AxiosError)
+        // const error = { message: "", code: 'ERR_NETWORK'};
+        dispatch(coursesDetailsSlice.actions.fatchingError(error))
     }
 };

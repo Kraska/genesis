@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Alert } from '../components/Alert';
 import { Course } from '../components/Course';
+import { Preloader } from '../components/Preloader';
 import { useAppDispatch, useAppSelector } from '../hooks/redux';
 import { ICourseDetails } from "../models/ICourseDetails";
 import { fetchCourseDetails } from '../store/reducers/coursesDetails/ActionCreators';
@@ -10,7 +12,7 @@ import { Layout } from './Layout';
 export const CoursePage: React.FC = () => {
 
     const { id } = useParams();
-// console.log(id)
+
     const { coursesMap, isLoading, error } = useAppSelector(state => state.coursesDetailsReducer);
 
     const dispatch = useAppDispatch();
@@ -22,5 +24,11 @@ export const CoursePage: React.FC = () => {
 
     return <Layout>
         {course && <Course course={course} />}
+
+        {isLoading ?
+                <Preloader /> :
+                error ? <Alert error={error} /> :
+                    course && <Course course={course} />
+        }
     </Layout>
 }

@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { APIError } from "../../../models/APIError"
 import { ICourse } from "../../../models/ICourse"
 
 
 type CoursesSatate = {
     coursesMap: Record<string, ICourse>,
     isLoading: boolean,
-    error: string,
+    error: APIError | null,
 }
 
 const initialState: CoursesSatate = {
     coursesMap: {},
     isLoading: false,
-    error: '',
+    error: null,
 }
 
 export const coursesSlice = createSlice({
@@ -26,10 +27,10 @@ export const coursesSlice = createSlice({
             action: PayloadAction<Record<string, ICourse>>
         ) {
             state.isLoading = false;
-            state.error = '';
+            state.error = null;
             state.coursesMap = action.payload;
         },
-        fatchingError(state, action: PayloadAction<string>) {
+        fatchingError(state, action: PayloadAction<APIError>) {
             state.isLoading = false;
             state.error = action.payload;
         }

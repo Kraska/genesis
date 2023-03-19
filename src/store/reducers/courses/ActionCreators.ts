@@ -5,6 +5,7 @@ import { ICourse } from "../../../models/ICourse";
 import { IAPICourse } from "../../../models/IAPICourse";
 import { AppDispatch } from "../../store";
 import { coursesSlice } from "./CoursesSlice"; 
+import { convertToAPIError } from "../../../models/APIError";
 
 
 export const fetchCourses = () => async(dispatch: AppDispatch) => {
@@ -13,7 +14,7 @@ export const fetchCourses = () => async(dispatch: AppDispatch) => {
         // console.log('fetchCourses')
         dispatch(coursesSlice.actions.fatching())
         const resp = await axios.get<{courses: IAPICourse[]}>(
-            `https://${AppConfig.API_HOST}/api/v1/core/preview-courses`, 
+            `https://${AppConfig.API_HOST}/api/v1/core/preview-courses1`, 
             {headers: { 
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${AppConfig.API_TOKEN}`,
@@ -30,7 +31,9 @@ export const fetchCourses = () => async(dispatch: AppDispatch) => {
 
         dispatch(coursesSlice.actions.fatchingSuccess(data));
     } catch(e) {
-        dispatch(coursesSlice.actions.fatchingError((e as AxiosError).message))
+        const error = convertToAPIError(e as AxiosError)
+        // const error = { message: "", code: 'ERR_NETWORK'};
+        dispatch(coursesSlice.actions.fatchingError(error))
     }
 };
 

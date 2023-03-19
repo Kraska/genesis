@@ -22,7 +22,7 @@ const homePageComponent = <>
 </>
 
 describe('Home Page', () => {
-  
+
   test('Render 3 courses on HomePage', async () => {
 
     axios.get.mockReturnValue({

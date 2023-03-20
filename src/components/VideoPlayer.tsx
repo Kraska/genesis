@@ -56,30 +56,44 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
             }
         }
 
-        if (this.videoRef.current) {
 
-            if(Hls.isSupported()) {
+        if(Hls.isSupported()) {
 
-                const hls = new Hls();
-                hls.loadSource(src);
+            let hls = new Hls(); 
+            // let hls = new Hls({debug: console});
+            hls.recoverMediaError()
+            hls.loadSource(src);
+
+            /* 
+            IMPORTANT!
+            Becouse of Allow CORS plagin sometimes media didn't attached 
+            So we have to attach it after MANIFEST_PARSED event,
+            and play video after MEDIA_ATTACHED event
+            */
+            autoPlay && hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                this.videoRef.current && 
                 hls.attachMedia(this.videoRef.current);
+            });
 
-                autoPlay && hls.on(Hls.Events.MANIFEST_PARSED, play);
-
-            } else if (this.videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+            hls.on(Hls.Events.MEDIA_ATTACHED, play);  
             
-                this.videoRef.current.src = src;                
-                autoPlay && this.videoRef.current.addEventListener('canplay', play);
-            }
+        } else if (
+            this.videoRef.current && 
+            this.videoRef.current.canPlayType('application/vnd.apple.mpegurl')
+        ) {
+        
+            this.videoRef.current.src = src;                
+            autoPlay && this.videoRef.current.addEventListener('canplay', play);
+        }
 
-            this.videoRef.current.onloadedmetadata = () => {
-                if (this.videoRef.current && currentTime) { 
-                    this.videoRef.current.currentTime = currentTime;
-                }
+        this.videoRef.current && 
+        (this.videoRef.current.onloadedmetadata = () => {
+            if (this.videoRef.current && currentTime) { 
+                this.videoRef.current.currentTime = currentTime;
             }
+        })
 
-            this.props.onUpdateTime && this.updateTime()
-        }    
+        this.props.onUpdateTime && this.updateTime()
 
         return <video {...restProps} ref={this.videoRef} />     
     }

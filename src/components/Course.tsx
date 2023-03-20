@@ -12,8 +12,6 @@ type CourseProps = {
 
 export const Course: React.FC<CourseProps> = ({ course }) => {
 
-    const videoRef = useRef<typeof VideoPlayer>(null);
-
     const initLesson = course.lessons
         .find(({ status }) => status === "unlocked")        
     const [ currentLesson, setCurrentLesson ] = useState(initLesson)
@@ -52,7 +50,6 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                     onUpdateTime={onUpdateTime}
                     controls 
                     style={{ width: "100%" }} 
-                    ref={videoRef}
                 />
             </>}
 

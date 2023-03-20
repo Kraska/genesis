@@ -1,102 +1,95 @@
 import Hls from "hls.js";
-import React, { RefObject } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
+import { Button } from "react-bootstrap";
 
 
 type VideoPlayerProps = {
     src: string,
     autoPlay?: boolean,
+    title?: string,
     currentTime?: number,
     onUpdateTime?: (time: number) => void,
     [x:string]: any
 }
 
-export class VideoPlayer extends React.Component<VideoPlayerProps> {
+export const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
 
-    private videoRef: RefObject<HTMLVideoElement>;
-    private intervalID: NodeJS.Timer | null = null;
+    let { src, autoPlay, title, currentTime, onUpdateTime, ...restProps } = props;
+    // src = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
+    
+    const videoRef = useRef<HTMLVideoElement>(null)
 
-    constructor( props: VideoPlayerProps ) {
-        super(props);
-        this.videoRef = React.createRef();
-    }
-
-    public switchPictureInPicture() {
-        // console.log('switchPictureInPicture')
-        this.videoRef.current?.requestPictureInPicture()
-        // this.videoRef.current?.enterpictureinpicture()   
-    }
-
-    public addListener(eventName: string, fn: () => void) {
-        this.videoRef.current?.addEventListener(eventName, fn)
-    }
-
-    private updateTime() {
-        if (!this.intervalID) {
-            this.intervalID = setInterval(() => {
-                this.videoRef.current &&
-                this.props.onUpdateTime &&
-                this.props.onUpdateTime(this.videoRef.current.currentTime)
+    let intervalID = useRef<NodeJS.Timer|null>(null)
+    
+    const updateTime = () => {
+        if (!intervalID.current) {
+            intervalID.current = setInterval(() => {
+                videoRef.current &&
+                onUpdateTime &&
+                onUpdateTime(videoRef.current.currentTime)
             }, 3000);
         }
     }
 
-    componentWillUnmount() {
-        this.intervalID && clearInterval(this.intervalID);
+    useEffect(()=> {
+        // onUnmount
+        return () => {intervalID.current && clearInterval(intervalID.current)}
+    }, [])
+
+    const play = () => {
+        if (videoRef.current) {
+            videoRef.current.muted = true 
+            videoRef.current.play();
+        }
     }
 
-    render() {
+    if(Hls.isSupported()) {
 
-        let { src, autoPlay, currentTime, onUpdateTime, ...restProps } = this.props;
-        // src = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
+        let hls = new Hls(); 
+        // let hls = new Hls({debug: console});
+        hls.recoverMediaError()
+        hls.loadSource(src);
 
-        const play = () => {
-            if (this.videoRef.current) {
-                this.videoRef.current.muted = true 
-                this.videoRef.current.play();
-            }
-        }
+        /* 
+        IMPORTANT!
+        Becouse of Allow CORS plagin, sometimes media didn't attached 
+        So we have to attach it after MANIFEST_PARSED event,
+        and play video after MEDIA_ATTACHED event
+        */
+        autoPlay && hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            videoRef.current && 
+            hls.attachMedia(videoRef.current);
+        });
 
-
-        if(Hls.isSupported()) {
-
-            let hls = new Hls(); 
-            // let hls = new Hls({debug: console});
-            hls.recoverMediaError()
-            hls.loadSource(src);
-
-            /* 
-            IMPORTANT!
-            Becouse of Allow CORS plagin sometimes media didn't attached 
-            So we have to attach it after MANIFEST_PARSED event,
-            and play video after MEDIA_ATTACHED event
-            */
-            autoPlay && hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                this.videoRef.current && 
-                hls.attachMedia(this.videoRef.current);
-            });
-
-            hls.on(Hls.Events.MEDIA_ATTACHED, play);  
-            
-        } else if (
-            this.videoRef.current && 
-            this.videoRef.current.canPlayType('application/vnd.apple.mpegurl')
-        ) {
+        hls.on(Hls.Events.MEDIA_ATTACHED, play);  
         
-            this.videoRef.current.src = src;                
-            autoPlay && this.videoRef.current.addEventListener('canplay', play);
-        }
-
-        this.videoRef.current && 
-        (this.videoRef.current.onloadedmetadata = () => {
-            if (this.videoRef.current && currentTime) { 
-                this.videoRef.current.currentTime = currentTime;
-            }
-        })
-
-        this.props.onUpdateTime && this.updateTime()
-
-        return <video {...restProps} ref={this.videoRef} />     
+    } else if (
+        videoRef.current && 
+        videoRef.current.canPlayType('application/vnd.apple.mpegurl')
+    ) {
+    
+        videoRef.current.src = src;                
+        autoPlay && videoRef.current.addEventListener('canplay', play);
     }
+
+    videoRef.current && 
+    (videoRef.current.onloadedmetadata = () => {
+        if (videoRef.current && currentTime) { 
+            videoRef.current.currentTime = currentTime;
+        }
+    })
+
+    onUpdateTime && updateTime()
+
+    return <>
+        <video {...restProps} ref={videoRef} />
+        {title && 
+            <div className="d-flex justify-content-between">
+                <h4>{title}</h4> 
+                <PIPBtn videoRef={videoRef} />
+            </div>
+        }
+    </>     
 }
 
 // type PreloaderProps = {
@@ -116,3 +109,37 @@ export class VideoPlayer extends React.Component<VideoPlayerProps> {
 //         <Container className="text-white" >Loading...</Container>
 //     </div>
 // }
+
+type PIPBtnProps = {
+    videoRef: RefObject<HTMLVideoElement>,
+}
+const PIPBtn: React.FC<PIPBtnProps> = ({ videoRef }) => {
+
+    const initTitle = "Go to picture in picture"
+    const [ disabled, setDisabled ] = useState(false)
+    const [ title, setTitle ] = useState(initTitle) 
+
+    useEffect(() => {
+
+        if (videoRef.current) {
+            videoRef.current.onenterpictureinpicture = () => {
+                setDisabled(true)
+                setTitle("Now in picture in picture")
+            }
+        
+            videoRef.current.onleavepictureinpicture = () => {
+                setDisabled(false)
+                setTitle(initTitle)
+            }
+        }
+
+    }, [])
+
+    return <Button 
+        variant="outline-secondary"
+        onClick={() => {videoRef.current?.requestPictureInPicture()}}
+        disabled={disabled}
+        >
+        {title}
+    </Button>
+}

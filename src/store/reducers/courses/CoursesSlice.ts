@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { APIError } from "../../../models/APIError"
+import { APIError } from "../../../api/APIError"
 import { ICourse } from "../../../models/ICourse"
 
 

@@ -1,5 +1,5 @@
 import { Alert as AlertBootstrap, Container } from 'react-bootstrap';
-import { APIError } from '../models/APIError';
+import { APIError } from '../api/APIError';
 
 type AlertProps = {
     error: APIError

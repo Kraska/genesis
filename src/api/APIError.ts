@@ -20,7 +20,7 @@ export type APIError = {
     code?: ErrorCode,
 }
 
-export const convertToAPIError = (axiosError: AxiosError) => {
+export const convertToAPIError = (axiosError: AxiosError): APIError => {
     const { message, code } = axiosError
     return { message, code }
 }

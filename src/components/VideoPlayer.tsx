@@ -18,9 +18,9 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
     // src = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8";
     
     const videoRef = useRef<HTMLVideoElement>(null)
-
-    let intervalID = useRef<NodeJS.Timer|null>(null)
     
+    const intervalID = useRef<NodeJS.Timer|null>(null)
+
     const updateTime = () => {
         if (!intervalID.current) {
             intervalID.current = setInterval(() => {
@@ -83,6 +83,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
 
     return <>
         <video {...restProps} ref={videoRef} />
+        {/* <Preloader videoRef={videoRef} /> */}
         {title && 
             <div className="d-flex justify-content-between">
                 <h4>{title}</h4> 
@@ -93,9 +94,18 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
 }
 
 // type PreloaderProps = {
-//     disabled?: boolean
+//     videoRef: RefObject<HTMLVideoElement>
 // }
-// const Preloader: React.FC<PreloaderProps> = ({ disabled }) => {
+// const Preloader: React.FC<PreloaderProps> = ({ videoRef }) => {
+
+//     const [disabled, setDisabled] = useState<boolean>(false)
+
+//     useEffect(() => {
+//         const disabled = videoRef.current && videoRef.current.isConnected
+//         setDisabled(!!disabled) 
+
+//     }, [videoRef.current, videoRef.current?.isConnected])
+
 //     return <div 
 //         className={disabled ? "d-none" : ""} 
 //         style={{position: "absolute", 

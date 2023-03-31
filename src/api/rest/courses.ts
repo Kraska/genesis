@@ -23,7 +23,6 @@ export const getCourses = async(): Promise<Record<string, ICourse>> => {
         return data
 
     } catch(e) {
-        // throw { message: "", code: 'ERR_NETWORK'};
         throw convertToAPIError(e as AxiosError)
     }
 }

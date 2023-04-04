@@ -16,27 +16,28 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
         .find(({ status }) => status === "unlocked")        
     const [ currentLesson, setCurrentLesson ] = useState(initLesson)
 
-    const psRef = useRef<ProgressStorage>(new ProgressStorage(course))
+    const progressItems = course.lessons.map(({ id, duration}) => ({ id, duration}))
+    const psRef = useRef<ProgressStorage>(new ProgressStorage(course.id, progressItems))
     useEffect(() => { 
-        psRef.current.load()
-        const lesson = psRef.current.getCurrentLesson() 
-        lesson && setCurrentLesson(lesson)
+        const progressItem = psRef.current.getCurrentItem() 
+        progressItem && 
+        setCurrentLesson(course.lessons.find(({ id }) => id == progressItem.id))
     }, [])
 
-    const onUpdateTime = (time: number) => {        
+    const onUpdateTime = (time: number) => {  
         currentLesson &&
-        psRef.current.save(currentLesson, time)
+        psRef.current.saveItemProgress(currentLesson.id, time)
     }
     
     const currentTime = currentLesson ? 
-        psRef.current.getProgress(currentLesson).time : 0;
+        psRef.current.getItemProgress(currentLesson.id).time : 0;
 
     return  <>
         <h1>{course.title}</h1>
         <ProgressBar 
             style={{height: "6px"}} 
             variant="success"  
-            now={psRef.current.getCourseProgress()} 
+            now={psRef.current.getProgress().persent} 
             />
         {/* videoSrc = {videoSrc} */}
         <Container className='my-5'>
@@ -64,7 +65,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
                             key={lesson.id} 
                             lesson={lesson} 
                             onOpen={setCurrentLesson} 
-                            progress={psRef.current.getProgress(lesson).persent}
+                            progress={psRef.current.getItemProgress(lesson.id).persent}
                             />))
                     } 
                 </Row>

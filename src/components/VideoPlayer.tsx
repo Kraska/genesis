@@ -22,13 +22,14 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
     const intervalID = useRef<NodeJS.Timer|null>(null)
 
     const updateTime = () => {
-        if (!intervalID.current) {
-            intervalID.current = setInterval(() => {
-                videoRef.current &&
-                onUpdateTime &&
-                onUpdateTime(videoRef.current.currentTime)
-            }, 3000);
-        }
+        intervalID.current && 
+        clearInterval(intervalID.current)
+        
+        intervalID.current = setInterval(() => {
+            videoRef.current &&
+            onUpdateTime &&
+            onUpdateTime(videoRef.current.currentTime)
+        }, 3000);
     }
 
     useEffect(()=> {

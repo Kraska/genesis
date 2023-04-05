@@ -1,60 +1,60 @@
-import {render, screen } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
-import { HomePage } from '../pages/HomePage'
-import { Provider } from 'react-redux'
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
+import { HomePage } from "../pages/HomePage";
+import { Provider } from "react-redux";
 import axios from "axios";
-import { setupStore } from '../store/store';
-import { MemoryRouter } from 'react-router-dom'
+import { setupStore } from "../store/store";
+import { MemoryRouter } from "react-router-dom";
 
-jest.mock('axios')
-let homePageComponent
+jest.mock("axios");
+let homePageComponent;
 
-
-describe('Handling errors', () => {
-  
+describe("Handling errors", () => {
   beforeEach(() => {
-    homePageComponent = <>
-      <MemoryRouter>
-        <Provider store={setupStore()}>
-          <HomePage />
-        </Provider>
-      </MemoryRouter>
-    </>
-  })
+    homePageComponent = (
+      <>
+        <MemoryRouter>
+          <Provider store={setupStore()}>
+            <HomePage />
+          </Provider>
+        </MemoryRouter>
+      </>
+    );
+  });
 
-  test('API return ERR_NETWORK ', async () => {
+  test("API return ERR_NETWORK", async () => {
+    axios.mockRejectedValueOnce({ message: "", code: "ERR_NETWORK" });
 
-    axios.mockRejectedValueOnce({message: "", code: 'ERR_NETWORK'})
+    render(homePageComponent);
 
-    render(homePageComponent)
+    await screen.findByText("You have problem with internet", { exact: false });
+  });
 
-    await screen.findByText("You have problem with internet", {exact: false})
-  })
+  test("API return ERR_DEPRECATED", async () => {
+    axios.mockRejectedValueOnce({ message: "", code: "ERR_DEPRECATED" });
 
-  test('API return ERR_DEPRECATED ', async () => {
+    render(homePageComponent);
 
-    axios.mockRejectedValueOnce({message: "", code: 'ERR_DEPRECATED'})
+    await screen.findByText(
+      "Deprecated! You are not allowed to see this content!"
+    );
+  });
 
-    render(homePageComponent)
+  test("API return ERR_BAD_REQUEST", async () => {
+    axios.mockRejectedValueOnce({ message: "", code: "ERR_BAD_REQUEST" });
 
-    await screen.findByText("Deprecated! You are not allowed to see this content!")
-  })
+    render(homePageComponent);
 
-  test('API return ERR_BAD_REQUEST ', async () => {
+    await screen.findByText(
+      "Sorry, we have a problem. Our developers are already fixing it!"
+    );
+  });
 
-    axios.mockRejectedValueOnce({message: "", code: 'ERR_BAD_REQUEST'})
+  test("API return ERR_BAD_RESPONSE", async () => {
+    axios.mockRejectedValueOnce({ message: "", code: "ERR_BAD_RESPONSE" });
 
-    render(homePageComponent)
+    render(homePageComponent);
 
-    await screen.findByText("Sorry, we have a problem. Our developers are already fixing it!")
-  })
-
-  test('API return ERR_BAD_RESPONSE ', async () => {
-
-    axios.mockRejectedValueOnce({message: "", code: 'ERR_BAD_RESPONSE'})
-
-    render(homePageComponent)
-
-    await screen.findByText("Oops! Error! Try again a little later!")
-  })
-})
+    await screen.findByText("Oops! Error! Try again a little later!");
+  });
+});

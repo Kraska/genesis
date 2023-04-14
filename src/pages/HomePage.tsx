@@ -13,8 +13,8 @@ export const HomePage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   useEffect(() => {
-    !Object.values(coursesMap).length && !isLoading && dispatch(fetchCourses());
-  }, []);
+    !coursesMap && !isLoading && dispatch(fetchCourses());
+  }, [coursesMap, isLoading, dispatch]);
 
   return (
     <Layout>
@@ -27,7 +27,7 @@ export const HomePage: React.FC = () => {
         ) : error ? (
           <Alert error={error} />
         ) : (
-          <CoursesList courses={Object.values(coursesMap)} />
+          <CoursesList courses={Object.values(coursesMap || {})} />
         )}
       </>
     </Layout>

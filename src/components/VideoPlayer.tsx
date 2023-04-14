@@ -139,7 +139,7 @@ const PIPBtn: React.FC<PIPBtnProps> = ({ videoRef }) => {
         setTitle(initTitle);
       };
     }
-  }, []);
+  }, [videoRef]);
 
   return (
     <Button

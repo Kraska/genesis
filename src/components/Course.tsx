@@ -24,7 +24,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
     const progressItem = psRef.current.getCurrentItem();
     progressItem &&
       setCurrentLesson(course.lessons.find(({ id }) => id === progressItem.id));
-  }, []);
+  }, [course.lessons]);
 
   const onUpdateTime = (time: number) => {
     currentLesson && psRef.current.saveItemProgress(currentLesson.id, time);

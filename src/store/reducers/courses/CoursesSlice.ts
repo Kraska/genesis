@@ -3,13 +3,13 @@ import { APIError } from "../../../api/APIError";
 import { ICourse } from "../../../models/ICourse";
 
 type CoursesSatate = {
-  coursesMap: Record<string, ICourse>;
+  coursesMap: Record<string, ICourse> | null;
   isLoading: boolean;
   error: APIError | null;
 };
 
 const initialState: CoursesSatate = {
-  coursesMap: {},
+  coursesMap: null,
   isLoading: false,
   error: null,
 };

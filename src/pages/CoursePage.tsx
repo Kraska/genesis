@@ -18,7 +18,7 @@ export const CoursePage: React.FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     id && !coursesMap[id] && !isLoading && dispatch(fetchCourseDetails(id));
-  }, []);
+  }, [id, coursesMap, isLoading, dispatch]);
 
   const course: ICourseDetails | null =
     id && coursesMap[id] ? coursesMap[id] : null;

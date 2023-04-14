@@ -15,7 +15,7 @@ type Props<D> = {
   settings?: Settings;
 };
 
-export default <D>({
+const makeRequest = <D>({
   url,
   method = "get",
   params = {},
@@ -39,3 +39,5 @@ export default <D>({
     headers,
   });
 };
+
+export default makeRequest;

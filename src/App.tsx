@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { AppRoute } from "./AppRoute";
 import { CoursePage } from "./pages/CoursePage";
-import { HomePageRAYF } from "./pages/RYF/HomePageRYF";
+import { HomePageRAYF } from "./pages/HomePageRYF";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {

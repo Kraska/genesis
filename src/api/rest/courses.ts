@@ -7,22 +7,21 @@ import { ICourse } from "../../models/ICourse";
 import makeRequest from "../makeRequest";
 import { ICourseDetails } from "../../models/ICourseDetails";
 
-export const getCourses = async (): Promise<Record<string, ICourse>> => {
+export const getCourses = async (): Promise<ICourse[]> => {
   try {
     const url = `https://${AppConfig.API_HOST}/api/v1/core/preview-courses`;
     const resp = await makeRequest<{ courses: IAPICourse[] }>({ url });
-
-    const data: Record<string, ICourse> = resp.data.courses
-      .map(convert)
-      .reduce<Record<string, ICourse>>((map, item) => {
-        map[item.id] = item;
-        return map;
-      }, {});
-
-    return data;
+    return resp.data.courses.map(convert);
   } catch (e) {
     throw convertToAPIError(e as AxiosError);
   }
+};
+
+export const getCoursesMap = async (): Promise<Record<string, ICourse>> => {
+  return (await getCourses()).reduce<Record<string, ICourse>>((map, item) => {
+    map[item.id] = item;
+    return map;
+  }, {});
 };
 
 export const getCourseDetails = async (
@@ -37,7 +36,7 @@ export const getCourseDetails = async (
   }
 };
 
-const convert = (course: IAPICourse): ICourse => {
+export const convert = (course: IAPICourse): ICourse => {
   const {
     id,
     title,

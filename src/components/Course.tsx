@@ -3,15 +3,14 @@ import { Card, Col, Container, ProgressBar, Row } from "react-bootstrap";
 import { Lesson } from "../models/Lesson";
 import { ICourseDetails } from "../models/ICourseDetails";
 import { ProgressStorage } from "../utils/ProgressStorage";
-import { VideoPlayer } from "./VideoPlayer";
+import { MemoVideoPlayer } from "./VideoPlayer";
 
 type CourseProps = {
   course: ICourseDetails;
 };
 
 export const Course: React.FC<CourseProps> = ({ course }) => {
-  const initLesson = course.lessons.find(({ status }) => status === "unlocked");
-  const [currentLesson, setCurrentLesson] = useState(initLesson);
+  const [currentLesson, setCurrentLesson] = useState<Lesson>();
 
   const progressItems = course.lessons.map(({ id, duration }) => ({
     id,
@@ -22,8 +21,12 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
   );
   useEffect(() => {
     const progressItem = psRef.current.getCurrentItem();
-    progressItem &&
-      setCurrentLesson(course.lessons.find(({ id }) => id === progressItem.id));
+    const lesson =
+      (progressItem &&
+        course.lessons.find(({ id }) => id === progressItem.id)) ||
+      course.lessons.find(({ status }) => status === "unlocked");
+
+    setCurrentLesson(lesson);
   }, [course.lessons]);
 
   const onUpdateTime = (time: number) => {
@@ -46,7 +49,7 @@ export const Course: React.FC<CourseProps> = ({ course }) => {
       <Container className="my-5">
         {currentLesson && (
           <>
-            <VideoPlayer
+            <MemoVideoPlayer
               src={currentLesson.link}
               muted
               autoPlay

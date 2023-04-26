@@ -1,5 +1,5 @@
 import Hls from "hls.js";
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, { memo, RefObject, useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 
 type VideoPlayerProps = {
@@ -60,7 +60,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = (props) => {
         videoRef.current && hls.attachMedia(videoRef.current);
       });
 
-    hls.on(Hls.Events.MEDIA_ATTACHED, play);
+    hls.on(Hls.Events.LEVEL_LOADED, play);
   } else if (
     videoRef.current &&
     videoRef.current.canPlayType("application/vnd.apple.mpegurl")
@@ -153,3 +153,5 @@ const PIPBtn: React.FC<PIPBtnProps> = ({ videoRef }) => {
     </Button>
   );
 };
+
+export const MemoVideoPlayer = memo(VideoPlayer);
